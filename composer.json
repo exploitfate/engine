@@ -1,0 +1,29 @@
+{
+    "name": "exploitfate/engine",
+    "description": "Create visitor and add to Engine Delivery queue",
+    "type": "project",
+    "version": "1.3.5",
+    "require": {
+        "php": ">=5.5",
+        "php-amqplib/php-amqplib": "^2.7"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Casper",
+            "email": "exploitfate@yahoo.com",
+            "role": "Developer"
+        }
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.3.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "engine\\": "src/"
+        }
+    }
+}
