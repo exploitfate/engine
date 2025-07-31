@@ -14,4 +14,18 @@ interface SubEngineParams extends EngineParams
      * @return string
      */
     public function getRequestSubIdParam();
+
+    /**
+     * Optional cp request param (CPA)
+     *
+     * @return string
+     */
+    public function getRequestCpParam();
+
+    /**
+     * Optional cp request param (CPA)
+     *
+     * @return string
+     */
+    public function getCookieCampaignName();
 }

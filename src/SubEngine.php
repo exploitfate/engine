@@ -8,6 +8,10 @@ class SubEngine extends AbstractEngine
      * @var string
      */
     protected $subIdValue;
+    /**
+     * @var string
+     */
+    protected $cpValue;
 
     /**
      * @var SubEngineParams
@@ -90,6 +94,11 @@ class SubEngine extends AbstractEngine
             $this->engineParams->getDefaultCampaignValue()
         );
         $requestSubIdValue = $this->request->getQueryParam($this->engineParams->getRequestSubIdParam());
+
+        $requestCpValue = $this->request->getQueryParam($this->engineParams->getRequestCpParam());
+        $cookieCpValue = $this->cookie->getCookieValue($this->engineParams->getCookieCpName());
+        $sessiobCpValue = $this->session->getSessionValue('cp');
+
         // When visitor with request campaign remove all previous data with new one
         if ($this->isCompetitionCampaign($requestCampaignValue, $cookieCampaignValue)) {
             $cookieSaltValue = $this->generateSalt();
@@ -102,6 +111,21 @@ class SubEngine extends AbstractEngine
             $this->CRCValue = $this->cookie->getCookieValue($this->engineParams->getCookieCRCName());
         }
         $subIdValue = $this->session->getSessionValue('sub_id');
+
+        if (!empty($cookieCpValue)) {
+            $cpValue = $cookieCpValue;
+        }
+        if (empty($cpValue)) {
+            if (!empty($sessiobCpValue)) {
+                $cpValue = $sessiobCpValue;
+            }
+        }
+        if (empty($cpValue)) {
+            if (!empty($requestCpValue)) {
+                $cpValue = $requestCpValue;
+            }
+        }
+
         // Generate new on not exists
         if (!$this->isValidCRC($this->CRCValue)) {
             if (empty($cookieSaltValue)) {
@@ -114,10 +138,20 @@ class SubEngine extends AbstractEngine
                 $subIdValue = $requestSubIdValue;
                 $this->session->setSessionValue('sub_id', $requestSubIdValue);
             }
+            if (!empty($requestCpValue)) {
+                $cpValue = $requestCpValue;
+                $this->session->setSessionValue('cp', $requestCpValue);
+            }
         }
         $this->cookie->setCookieValue(
             $this->engineParams->getCookieCampaignName(),
             $campaignValue,
+            '.' . $hostname,
+            $cookieExpire
+        );
+        $this->cookie->setCookieValue(
+            $this->engineParams->getCookieCpName(),
+            $cpValue,
             '.' . $hostname,
             $cookieExpire
         );
@@ -143,6 +177,7 @@ class SubEngine extends AbstractEngine
                     $this->engineParams->getRequestCampaignParam(),
                     $this->engineParams->getRequestCampaignAliasParam(),
                     $this->engineParams->getRequestSubIdParam(),
+                    $this->engineParams->getRequestCpParam(),
                     $this->refAffKeyParam,
                     $this->refSourceParam,
                     $this->refSubAffParam,
@@ -165,6 +200,7 @@ class SubEngine extends AbstractEngine
             'timestamp' => (integer)$this->request->getTimestamp(),
             'user_id' => (integer)$campaignValue,
             'sub_id' => (string)$subIdValue,
+            'cp' => (int)$subIdValue,
             'crc' => (string)$this->CRCValue,
             'referrer' => (string)$this->getReferrerValue(),
             'coupon' => '',
