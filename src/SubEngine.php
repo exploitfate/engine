@@ -194,7 +194,7 @@ class SubEngine extends AbstractEngine
             'timestamp' => (integer)$this->request->getTimestamp(),
             'user_id' => (integer)$campaignValue,
             'sub_id' => (string)$subIdValue,
-            'cp' => (int)$subIdValue,
+            'cp' => (int)$cpValue,
             'crc' => (string)$this->CRCValue,
             'referrer' => (string)$this->getReferrerValue(),
             'coupon' => '',
