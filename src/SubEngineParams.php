@@ -27,5 +27,5 @@ interface SubEngineParams extends EngineParams
      *
      * @return string
      */
-    public function getCookieCampaignName();
+    public function getCookieCpName();
 }

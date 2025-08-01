@@ -114,16 +114,10 @@ class SubEngine extends AbstractEngine
 
         if (!empty($cookieCpValue)) {
             $cpValue = $cookieCpValue;
-        }
-        if (empty($cpValue)) {
-            if (!empty($sessiobCpValue)) {
-                $cpValue = $sessiobCpValue;
-            }
-        }
-        if (empty($cpValue)) {
-            if (!empty($requestCpValue)) {
-                $cpValue = $requestCpValue;
-            }
+        } elseif (!empty($sessiobCpValue)) {
+            $cpValue = $sessiobCpValue;
+        } else {
+            $cpValue = $requestCpValue;
         }
 
         // Generate new on not exists
